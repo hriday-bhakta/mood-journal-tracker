@@ -67,8 +67,29 @@ def view(date=None, keyword=None):
     return
 
 def analytics():
+    try:
+        with open("journal.txt", "r") as file_read:
+            entries = file_read.read().strip().split("\n\n")
+            mood_count = {"happy": 0, "sad": 0, "angry": 0, "anxious": 0, "neutral": 0}
+
+            for entry in entries:
+                mood_line = next((line for line in entry.split("\n") if line.startswith("Mood:")), None)
+                if mood_line:
+                    mood = mood_line.split(": ")[1].lower()
+                    if mood in mood_count:
+                        mood_count[mood] += 1
+                    else:
+                        mood_count["neutral"] += 1
+
+            print("Mood Analytics:")
+            for mood, count in mood_count.items():
+                print(f"You were {mood.capitalize()} for {count} day(s).")
+
+    except FileNotFoundError:
+        print("No journal entries found. Please write a new entry first.")
     return
 
+# main loop
 while True:
     try:
         choice = int(input("\n\nEnter your choice:\n1. Write a new journal entry\n2. View Past Entries\n3. View Mood Analytics\n4. Exit\nChoice: "))
