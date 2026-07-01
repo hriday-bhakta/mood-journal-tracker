@@ -1,11 +1,11 @@
 def date_verify(date):
     try:
         day, month, year = map(int, date.split('-'))
-        if 1 <= day <= 31 and 1 <= month <= 12 and year >= 0:
+        if 1 <= day <= 31 and 1 <= month <= 12 and 99 >= year >= 0:
             return True
         else:
             return False
-    except ValueError:
+    except (ValueError, EOFError):
         return False
     
 def check_mood(entry):
@@ -17,6 +17,7 @@ def check_mood(entry):
     }
 
     entry_lower = entry.lower()
+    
     for mood, keywords in mood_keywords.items():
         for keyword in keywords:
             if keyword in entry_lower:
@@ -71,9 +72,18 @@ def analytics():
 while True:
     try:
         choice = int(input("\n\nEnter your choice:\n1. Write a new journal entry\n2. View Past Entries\n3. View Mood Analytics\n4. Exit\nChoice: "))
-    except ValueError:
+        
+    except (ValueError, EOFError):
         print("Invalid input. Please enter a number.")
         continue
+    
+    except KeyboardInterrupt:
+        sure = input("\nAre you sure you want to exit? (Type Y or yes to exit and anything else to continue): ")
+        if sure.lower() == 'y' or sure.lower() == 'yes':
+            print("Exiting the journal application. Goodbye!")
+            break   
+        else:
+            continue
 
     else:
         if choice == 4:
