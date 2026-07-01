@@ -83,7 +83,8 @@ def analytics():
 
             print("Mood Analytics:")
             for mood, count in mood_count.items():
-                print(f"You were {mood.capitalize()} for {count} day(s).")
+                if count > 0:
+                    print(f"You were {mood.capitalize()} for {count} day(s).")
 
     except FileNotFoundError:
         print("No journal entries found. Please write a new entry first.")
